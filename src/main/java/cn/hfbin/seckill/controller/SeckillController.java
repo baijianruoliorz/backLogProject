@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.spi.DirStateFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +98,7 @@ public class SeckillController implements InitializingBean {
         return "order_detail";
     }
 
+
     @RequestMapping(value = "/{path}/seckill", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> list(Model model,
@@ -161,6 +163,17 @@ public class SeckillController implements InitializingBean {
      * -1：秒杀失败
      * 0： 排队中
      */
+//    @RequestMapping(value = "/result", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Result<Long> miaoshaResult(@RequestParam("goodsId") long goodsId, HttpServletRequest request) {
+//        String loginToken = CookieUtil.readLoginToken(request);
+//        User user = redisService.get(UserKey.getByName, loginToken, User.class);
+//        if (user == null) {
+//            return Result.error(CodeMsg.USER_NO_LOGIN);
+//        }
+//        long result = seckillOrderService.getSeckillResult((long) user.getId(), goodsId);
+//        return Result.success(result);
+//    }
     @RequestMapping(value = "/result", method = RequestMethod.GET)
     @ResponseBody
     public Result<Long> miaoshaResult(@RequestParam("goodsId") long goodsId, HttpServletRequest request) {
@@ -169,10 +182,11 @@ public class SeckillController implements InitializingBean {
         if (user == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
-        long result = seckillOrderService.getSeckillResult((long) user.getId(), goodsId);
+        long result = seckillOrderService.getSeckillResult( long)user.getId(), goodsId);
         return Result.success(result);
     }
-    @AccessLimit(seconds=5, maxCount=5, needLogin=true)
+
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
     @RequestMapping(value = "/path", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getMiaoshaPath(HttpServletRequest request, User user,
