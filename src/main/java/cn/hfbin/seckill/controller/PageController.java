@@ -2,6 +2,7 @@ package cn.hfbin.seckill.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by: HuangFuBin
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
 
 
+
     @RequestMapping("login")
     public String loginPage(){
-
         return "login";
     }
 }
