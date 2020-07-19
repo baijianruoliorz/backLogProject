@@ -25,24 +25,43 @@ public class SessionExpireFilter implements Filter {
 
     }
 
+//    @Override
+//    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//        HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+//
+//        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+//
+//        if(StringUtils.isNotEmpty(loginToken)){
+//            //判断logintoken是否为空或者""；
+//            //如果不为空的话，符合条件，继续拿user信息
+//            User user = redisService.get(UserKey.getByName,loginToken, User.class);
+//            if(user != null){
+//                //如果user不为空，则重置session的时间，即调用expire命令
+//                redisService.expice(UserKey.getByName , loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+//            }
+//        }
+//        filterChain.doFilter(servletRequest,servletResponse);
+//    }
+//
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+    public void doFilter(ServletRequest servletRequest,ServletResponse servletResponse,FilterChain filterChain) throws IOException,ServletException{
+        HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
 
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        String loginToken=CookieUtil.readLoginToken(httpServletRequest);
+        if (StringUtils.isNotEmpty(loginToken)) {
+//            判断logintoken是否为空或者"";
+//            如果不为空的话,符合条件,继续拿user信息
+            User user = redisService.get(UserKey.getByName, loginToken, User.class);
+            if (user != null) {
 
-        if(StringUtils.isNotEmpty(loginToken)){
-            //判断logintoken是否为空或者""；
-            //如果不为空的话，符合条件，继续拿user信息
-            User user = redisService.get(UserKey.getByName,loginToken, User.class);
-            if(user != null){
-                //如果user不为空，则重置session的时间，即调用expire命令
-                redisService.expice(UserKey.getByName , loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+//                如果user不为空,则重置session的时间,即调用expireing命令
+                redisService.expice(UserKey.getByName, loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
             }
         }
         filterChain.doFilter(servletRequest,servletResponse);
-    }
 
+        }
 
     @Override
     public void destroy() {
