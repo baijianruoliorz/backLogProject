@@ -12,6 +12,7 @@ import cn.hfbin.seckill.service.SeckillGoodsService;
 import cn.hfbin.seckill.service.SeckillOrderService;
 import cn.hfbin.seckill.util.CookieUtil;
 import cn.hfbin.seckill.vo.OrderDetailVo;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/order")
-public class SeckillOrderController {
+public class
+SeckillOrderController {
     @Autowired
     RedisService redisService;
     @Autowired
@@ -37,24 +39,42 @@ public class SeckillOrderController {
     @Autowired
     SeckillGoodsService seckillGoodsService;
 
+//    @RequestMapping("/detail")
+//    @ResponseBody
+//    public Result<OrderDetailVo> info(Model model,
+//                                      @RequestParam("orderId") long orderId , HttpServletRequest request) {
+//        String loginToken = CookieUtil.readLoginToken(request);
+//        User user = redisService.get(UserKey.getByName, loginToken, User.class);
+//        if(user == null) {
+//            return Result.error(CodeMsg.USER_NO_LOGIN);
+//        }
+//        OrderInfo order = seckillOrderService.getOrderInfo(orderId);
+//        if(order == null) {
+//            return Result.error(CodeMsg.ORDER_NOT_EXIST);
+//        }
+//        long goodsId = order.getGoodsId();
+//        GoodsBo goods = seckillGoodsService.getseckillGoodsBoByGoodsId(goodsId);
+//        OrderDetailVo vo = new OrderDetailVo();
+//        vo.setOrder(order);
+//        vo.setGoods(goods);
+//        return Result.success(vo);
+//    }
     @RequestMapping("/detail")
     @ResponseBody
-    public Result<OrderDetailVo> info(Model model,
-                                      @RequestParam("orderId") long orderId , HttpServletRequest request) {
-        String loginToken = CookieUtil.readLoginToken(request);
-        User user = redisService.get(UserKey.getByName, loginToken, User.class);
-        if(user == null) {
+    public Result<OrderDetailVo> info(Model model,@RequestParam("orderId") long orderId,HttpServletRequest request){
+        String loginToken=CookieUtil.readLoginToken(request);
+        User user=redisService.get(UserKey.getByName,loginToken,User.class);
+        if (user==null){
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
-        OrderInfo order = seckillOrderService.getOrderInfo(orderId);
-        if(order == null) {
+        OrderInfo order=seckillOrderService.getOrderInfo(orderId);
+        if (order==null){
             return Result.error(CodeMsg.ORDER_NOT_EXIST);
         }
-        long goodsId = order.getGoodsId();
-        GoodsBo goods = seckillGoodsService.getseckillGoodsBoByGoodsId(goodsId);
-        OrderDetailVo vo = new OrderDetailVo();
+        long goodId=order.getGoodsId();
+        GoodsBo goods=seckillGoodsService.getseckillGoodsBoByGoodsId(goodId);
+        OrderDetailVo vo=new OrderDetailVo();
         vo.setOrder(order);
         vo.setGoods(goods);
         return Result.success(vo);
-    }
-}
+    }}
