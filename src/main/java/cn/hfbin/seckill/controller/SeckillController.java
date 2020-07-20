@@ -57,7 +57,7 @@ public class SeckillController implements InitializingBean {
     /**
      * 系统初始化
      */
-    public void afterPropertiesSet() throws Exception {
+    public void afterProperrtiesSet() throws Exception {
         List<GoodsBo> goodsList = seckillGoodsService.getSeckillGoodsList();
         if (goodsList == null) {
             return;
@@ -182,21 +182,38 @@ public class SeckillController implements InitializingBean {
         if (user == null) {
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
-        long result = seckillOrderService.getSeckillResult( long)user.getId(), goodsId);
+        long result = seckillOrderService.getSeckillResult((long)user.getId(), goodsId);
         return Result.success(result);
     }
 
-    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
-    @RequestMapping(value = "/path", method = RequestMethod.GET)
+//    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
+////    @RequestMapping(value = "/path", method = RequestMethod.GET)
+////    @ResponseBody
+////    public Result<String> getMiaoshaPath(HttpServletRequest request, User user,
+////                                         @RequestParam("goodsId") long goodsId) {
+////        String loginToken = CookieUtil.readLoginToken(request);
+////        user = redisService.get(UserKey.getByName, loginToken, User.class);
+////        if (user == null) {
+////            return Result.error(CodeMsg.USER_NO_LOGIN);
+////        }
+////        String path = seckillOrderService.createMiaoshaPath(user, goodsId);
+////        return Result.success(path);
+////    }
+    @AccessLimit(seconds = 5,maxCount = 5,needLogin = true)
+    @RequestMapping(value = "/path",method = RequestMethod.GET)
     @ResponseBody
-    public Result<String> getMiaoshaPath(HttpServletRequest request, User user,
-                                         @RequestParam("goodsId") long goodsId) {
-        String loginToken = CookieUtil.readLoginToken(request);
-        user = redisService.get(UserKey.getByName, loginToken, User.class);
-        if (user == null) {
+    public Result<String> getMiaoshaPath(HttpServletRequest request,User user,@RequestParam(value = "goodsId") long goodId){
+        String loginToken=CookieUtil.readLoginToken(request);
+        user=redisService.get(UserKey.getByName,loginToken,User.class);
+        if (user==null){
             return Result.error(CodeMsg.USER_NO_LOGIN);
         }
-        String path = seckillOrderService.createMiaoshaPath(user, goodsId);
+        String path=seckillOrderService.createMiaoshaPath(user,goodId);
         return Result.success(path);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
     }
 }
